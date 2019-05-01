@@ -4,7 +4,7 @@ from math import exp, pow
 
 class MultiLayerPerceptron:
     def __init__(self, num_inputs, num_hidden, num_outputs, activation_type):
-        self.number_inputs = num_inputs
+        self.number_inputs = num_inputs + 1
         self.number_hidden_units = num_hidden
         self.number_outputs = num_outputs
         self.hidden_neuron_values = np.zeros(self.number_hidden_units)
@@ -29,9 +29,9 @@ class MultiLayerPerceptron:
         }
 
     def randomize(self):
-        self.weights_lower = np.random.uniform(-0.2, 0.2, size=(
+        self.weights_lower = np.random.uniform(-0.3, 0.3, size=(
             self.number_inputs, self.number_hidden_units))
-        self.weights_upper = np.random.uniform(-0.2, 0.2, size=(
+        self.weights_upper = np.random.uniform(-0.3, 0.3, size=(
             self.number_hidden_units, self.number_outputs))
 
         # self.weights_lower = np.ndarray(shape=(2, 2), dtype=float, buffer=np.array([
@@ -47,15 +47,18 @@ class MultiLayerPerceptron:
 
     def forward(self, input):
         self.inputs = input
+        self.inputs = np.append(self.inputs, 0.5)
         # Net_H
         self.total_net_inputs_lower = np.dot(
-            self.inputs, self.weights_lower) + self.bias[0]
+            self.inputs, self.weights_lower)
+        #  + self.bias[0]
         # Out_H
         self.activations_lower = np.array(
             map(lambda x: self.activation[self.activation_type](x), self.total_net_inputs_lower))
         # Net_O
         self.total_net_inputs_upper = np.dot(
-            self.activations_lower, self.weights_upper) + self.bias[1]
+            self.activations_lower, self.weights_upper)
+        #  + self.bias[1]
         # Out_O
         self.activations_upper = np.array(
             map(lambda x: self.activation[self.activation_type](x), self.total_net_inputs_upper))

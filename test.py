@@ -13,8 +13,8 @@ target = np.array([0, 1, 1, 0])
 # target = np.array([0])
 # target = np.array([0.01, 0.99, .5])
 learning_rate = .2
-max_epochs = 5000
-activation_type = "relu"
+max_epochs = 10000
+activation_type = "tanh"
 output = np.zeros(target.shape)
 
 nn = MultiLayerPerceptron(
