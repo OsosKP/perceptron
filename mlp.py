@@ -28,6 +28,12 @@ class MultiLayerPerceptron:
             "tanh": self.tanh_activation
         }
 
+        self.input_bias_value = {
+            "sigmoid": .45,
+            "relu": 0.8,
+            "tanh": 0.5
+        }
+
     def randomize(self):
         self.weights_lower = np.random.uniform(-0.3, 0.3, size=(
             self.number_inputs, self.number_hidden_units))
@@ -39,7 +45,7 @@ class MultiLayerPerceptron:
         # self.weights_upper = np.ndarray(shape=(2, 2), dtype=float, buffer=np.array([
         #     [0.4, 0.5], [0.45, 0.55]]))
 
-        self.bias = [0.35, 0.6]
+        # self.bias = [0.35, 0.6]
         self.deltas_lower = np.zeros(self.weights_lower.shape)
         self.deltas_upper = np.zeros(self.weights_upper.shape)
         self.activations_lower = np.zeros(self.weights_lower.shape)
@@ -47,7 +53,8 @@ class MultiLayerPerceptron:
 
     def forward(self, input):
         self.inputs = input
-        self.inputs = np.append(self.inputs, 0.5)
+        self.inputs = np.append(
+            self.inputs, self.input_bias_value[self.activation_type])
         # Net_H
         self.total_net_inputs_lower = np.dot(
             self.inputs, self.weights_lower)
