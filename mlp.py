@@ -3,10 +3,10 @@ from math import exp, pow
 
 
 class MultiLayerPerceptron:
-    def __init__(self, num_inputs, num_hidden, num_outputs, activation_type):
-        self.number_inputs = num_inputs + 1
-        self.number_hidden_units = num_hidden
-        self.number_outputs = num_outputs
+    def __init__(self, options):
+        self.number_inputs = options["number_inputs"] + 1
+        self.number_hidden_units = options["number_hidden_units"]
+        self.number_outputs = options["number_outputs"]
         self.hidden_neuron_values = np.zeros(self.number_hidden_units)
         self.hidden_errors = np.zeros(self.number_hidden_units)
         self.total_net_inputs_lower = np.zeros(
@@ -16,7 +16,7 @@ class MultiLayerPerceptron:
             self.output.shape)
         self.randomize()
 
-        self.activation_type = activation_type
+        self.activation_type = options["activation_type"]
         self.derivative_output_wrt_activations = {
             "sigmoid": self.derivative_output_wrt_sigmoid_activations,
             "relu": self.derivative_output_wrt_relu_activations,
@@ -27,7 +27,6 @@ class MultiLayerPerceptron:
             "relu": self.relu_activation,
             "tanh": self.tanh_activation
         }
-
         self.input_bias_value = {
             "sigmoid": .45,
             "relu": 0.8,
@@ -40,12 +39,6 @@ class MultiLayerPerceptron:
         self.weights_upper = np.random.uniform(-0.3, 0.3, size=(
             self.number_hidden_units, self.number_outputs))
 
-        # self.weights_lower = np.ndarray(shape=(2, 2), dtype=float, buffer=np.array([
-        #     [0.15, 0.25], [0.2, 0.3]]))
-        # self.weights_upper = np.ndarray(shape=(2, 2), dtype=float, buffer=np.array([
-        #     [0.4, 0.5], [0.45, 0.55]]))
-
-        # self.bias = [0.35, 0.6]
         self.deltas_lower = np.zeros(self.weights_lower.shape)
         self.deltas_upper = np.zeros(self.weights_upper.shape)
         self.activations_lower = np.zeros(self.weights_lower.shape)
@@ -58,14 +51,12 @@ class MultiLayerPerceptron:
         # Net_H
         self.total_net_inputs_lower = np.dot(
             self.inputs, self.weights_lower)
-        #  + self.bias[0]
         # Out_H
         self.activations_lower = np.array(
             map(lambda x: self.activation[self.activation_type](x), self.total_net_inputs_lower))
         # Net_O
         self.total_net_inputs_upper = np.dot(
             self.activations_lower, self.weights_upper)
-        #  + self.bias[1]
         # Out_O
         self.activations_upper = np.array(
             map(lambda x: self.activation[self.activation_type](x), self.total_net_inputs_upper))
@@ -129,9 +120,6 @@ class MultiLayerPerceptron:
             for j in range(self.deltas_lower.shape[1]):
                 self.deltas_lower[i][j] += self.lower_error_wrt_weight[i][j]
 
-        # print('Input: {0}\tOutput: {1}\tError: {2}').format(
-            # self.inputs, self.activations_upper, error)
-
         return error
 
     def update_weights(self, learning_rate):
@@ -158,6 +146,8 @@ class MultiLayerPerceptron:
         for index, value in np.ndenumerate(layer):
             if (value > 0):
                 values[index] = 1
+            # else:
+            #     values[index] = value / 100
         return values
 
     def derivative_output_wrt_tanh_activations(self, layer):
@@ -165,7 +155,7 @@ class MultiLayerPerceptron:
 
     def sigmoid_activation(self, input): return pow(1. + exp(-input), -1.)
 
-    def relu_activation(self, input): return max(0, input)
+    def relu_activation(self, input): return max(0.01 * input, input)
 
     def tanh_activation(self, input):
         e_pos = exp(input)
