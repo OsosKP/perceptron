@@ -70,6 +70,7 @@ class MultiLayerPerceptron:
                               self.activations_upper, target))
 
     def backward(self, target):
+        # print('Check 2')
         error = self.calculator_error(target)
         # dE / dO_U
         self.d_error_wrt_output_upper = self.derivative_error_wrt_output(
@@ -146,8 +147,8 @@ class MultiLayerPerceptron:
         for index, value in np.ndenumerate(layer):
             if (value > 0):
                 values[index] = 1
-            # else:
-            #     values[index] = value / 100
+            else:
+                values[index] = value / 100
         return values
 
     def derivative_output_wrt_tanh_activations(self, layer):
@@ -163,3 +164,6 @@ class MultiLayerPerceptron:
         return (e_pos - e_neg) / (e_pos + e_neg)
 
     def squared_error(self, output, target): return pow(target - output, 2.)
+
+    def average_miss(self, target, output):
+        return (sum(map(lambda x, y: abs(x - y), target, output))) / target.shape[0]
