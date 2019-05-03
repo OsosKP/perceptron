@@ -52,7 +52,7 @@ options = {
         "number_inputs": number_inputs,
         "number_hidden_units": number_hidden_units,
         "number_outputs": number_outputs,
-        "activation_type": activation_type,
+        "activation_type": activation_type
     },
     "sin": factory.sin_finder(activation_type)
 }

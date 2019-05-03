@@ -21,7 +21,7 @@ learning_rate_change = {
     "relu": 0.9
 }
 
-max_epochs = 5000
+max_epochs = 500
 
 factory = MLP_Factory()
 
@@ -50,15 +50,14 @@ for epoch in range(max_epochs):
         learning_rate[activation_type] *= learning_rate_change[activation_type]
 
 print('Training:\tAverage difference between target and output: {0}').format(
-    nn.average_miss(target_train, output_train))
+    nn.average_miss(target_train, output_train)[0])
 
 # Testing
 print("----------------------------------\nTest\n----------------------------------")
-for epoch in range(max_epochs):
-    error = 0
-    for index, value in enumerate(input_test):
-        output_test[index] = nn.forward(value)
-        error += nn.backward(target_test[index])
+error = 0
+for index, value in enumerate(input_test):
+    output_test[index] = nn.forward(value)
+    error += nn.backward(target_test[index])
 
-print('Testing:\tAverage difference between target and output: {0}').format(
-    nn.average_miss(target_test, output_test))
+print('Testing:\tDifference between target and output: {0}').format(
+    nn.average_miss(target_test, output_test)[0])
