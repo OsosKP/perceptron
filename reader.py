@@ -6,7 +6,7 @@ class Reader:
         read = []
         target = []
         # target_line = [0] * 26
-        input = []
+        input_values = []
         with open('letter-recognition.data', 'r') as file:
             for line in file:
                 # target_line = [0] * 26
@@ -14,16 +14,16 @@ class Reader:
                 target.append(float(ord(read.pop(0))) / 100)
                 # target_line[ord(read.pop(0)) - 65] = 1
                 # target.append(target_line)
-                input.append(map(lambda x: x / 100, map(float, read)))
+                input_values.append(map(lambda x: x / 100, map(float, read)))
         self.values = {
             "target": np.asarray(target),
-            "input": np.asarray(input)
+            "input": np.asarray(input_values)
         }
 
     def result(self, arg):
         return self.values[arg]
 
-    def alphbet(self, index):
+    def alphabet(self, index):
         return chr(index + 65)
 
     def letter(self, ascii_value):
